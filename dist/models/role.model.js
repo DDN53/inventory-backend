@@ -3,6 +3,22 @@ import { sequelize } from "../config/db.js";
 export class Role extends Model {
 }
 Role.init({
-    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-    name: { type: DataTypes.STRING, allowNull: false, unique: true },
-}, { sequelize, modelName: "role" });
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+    },
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+    },
+    description: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+}, {
+    sequelize,
+    modelName: "role",
+    tableName: "roles",
+});
