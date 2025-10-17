@@ -1,66 +1,21 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../config/db.js";
-import { Role } from "./role.model.js";
 
-interface PermissionAttributes {
-  id: number;
-  name: string;
-  description?: string;
-}
-
-export class Permission extends Model<PermissionAttributes> {
+export class Permission extends Model {
   declare id: number;
   declare name: string;
   declare description?: string;
 }
 
-// 🧱 Permission table definition
 Permission.init(
   {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    description: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
+    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+    name: { type: DataTypes.STRING, allowNull: false, unique: true },
+    description: { type: DataTypes.STRING },
   },
   {
     sequelize,
     modelName: "permission",
     tableName: "permissions",
-    timestamps: false,
   }
 );
-
-// 🔗 Many-to-Many relationship between Role ↔ Permission
-export const RolePermission = sequelize.define(
-  "role_permission",
-  {
-    roleId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: Role,
-        key: 'id'
-      }
-    },
-    permissionId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: Permission,
-        key: 'id'
-      }
-    }
-  },
-  { timestamps: false, tableName: "role_permissions" }
-);
-
-Role.belongsToMany(Permission, { through: RolePermission, foreignKey: "roleId" });
-Permission.belongsToMany(Role, { through: RolePermission, foreignKey: "permissionId" });

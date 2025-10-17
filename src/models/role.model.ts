@@ -1,4 +1,4 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, Model, Optional } from "sequelize";
 import { sequelize } from "../config/db.js";
 
 interface RoleAttributes {
@@ -7,7 +7,10 @@ interface RoleAttributes {
   description?: string;
 }
 
-export class Role extends Model<RoleAttributes> {
+type RoleCreationAttributes = Optional<RoleAttributes, "id">;
+
+export class Role extends Model<RoleAttributes, RoleCreationAttributes>
+  implements RoleAttributes {
   declare id: number;
   declare name: string;
   declare description?: string;
@@ -15,20 +18,9 @@ export class Role extends Model<RoleAttributes> {
 
 Role.init(
   {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    description: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
+    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+    name: { type: DataTypes.STRING, allowNull: false, unique: true },
+    description: { type: DataTypes.STRING },
   },
   {
     sequelize,

@@ -1,14 +1,21 @@
 import { sequelize } from "../config/db.js";
 import { Role } from "./role.model.js";
-import { User } from "./user.js";
-import { Product } from "./product.model.js";
-import { Warehouse } from "./warehouse.model.js";
-import { StockLedger } from "./stockLedger.model.js";
+import { User } from "./user.model.js";
+import { Permission } from "./permission.model.js";
 
+// Role ↔ User (1:N)
+Role.hasMany(User, { foreignKey: "roleId", as: "users" });
+User.belongsTo(Role, { foreignKey: "roleId", as: "userRole" });
 
-export { sequelize, Role, User, Product, Warehouse, StockLedger };
+// Role ↔ Permission (M:N)
+export const RolePermission = sequelize.define(
+  "role_permission",
+  {},
+  { timestamps: false, tableName: "role_permissions" }
+);
 
-export const syncModels = async () => {
-  await sequelize.sync({ alter: true }); // or { force: true } for reset
-  console.log("✅ All models synced successfully!");
-};
+Role.belongsToMany(Permission, { through: RolePermission, as: "permissions" });
+Permission.belongsToMany(Role, { through: RolePermission, as: "roles" });
+
+// Export all
+export { sequelize, Role, User, Permission };

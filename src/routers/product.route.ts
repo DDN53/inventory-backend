@@ -5,6 +5,6 @@ import { requirePermission } from "../middleware/rbac.js";
 
 export const router = Router();
 router.get("/", requireAuth, requirePermission("product.read"), ctrl.list);
-router.post("/", requireAuth, requirePermission("product.create"), ctrl.create);
+router.post("/produts", requireAuth, requirePermission("product.create"), ctrl.create);
 router.put("/:id", requireAuth, requirePermission("product.update"), ctrl.update);
 router.delete("/:id", requireAuth, requirePermission("product.delete"), ctrl.remove);
